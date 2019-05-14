@@ -16,7 +16,7 @@ class ConStruct
   def set_args
     @args.each do |arg|
       error_message = 'only String or Symbol argument types allowed'
-      correct_types = [Symbol, String].map { |klass| arg.is_a?(klass) }.any?
+      correct_types = [Symbol, String].any? { |klass| arg.is_a?(klass) }
       raise TypeError, error_message unless correct_types
 
       Object.const_set arg.upcase, arg
