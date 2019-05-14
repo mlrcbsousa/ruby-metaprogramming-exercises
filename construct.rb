@@ -2,6 +2,8 @@ require 'rspec/autorun'
 require 'byebug'
 
 class ConStruct
+  attr_reader :temp
+
   def initialize(*args)
     @args = args
     set_args
@@ -30,7 +32,7 @@ class ConStruct
   end
 
   def define_initialize
-    @temp.define_method('initialize') do |*args|
+    temp.define_method('initialize') do |*args|
       arguments = "(given #{args.size}, expected #{SIZE})"
       error_message = "wrong number of arguments #{arguments}"
       raise ArgumentError, error_message if args.size != SIZE
@@ -41,26 +43,23 @@ class ConStruct
 
   def define_getters
     ARGS.each do |arg|
-      @temp.define_method(arg) { instance_variable_get "@#{arg}" }
+      temp.define_method(arg) { instance_variable_get "@#{arg}" }
     end
   end
 
   def define_setters
     ARGS.each do |arg|
-      @temp.define_method("#{arg}=") { |x| instance_variable_set "@#{arg}", x }
+      temp.define_method("#{arg}=") { |x| instance_variable_set "@#{arg}", x }
     end
   end
 
-  def return_class
-    # Object.send(:remove_const, 'SIZE')
-    # Object.send(:remove_const, 'ARGS')
-    # @args.each { |arg| Object.send(:remove_const, arg.upcase) }
-    @temp
-  end
+  # Object.send(:remove_const, 'SIZE')
+  # Object.send(:remove_const, 'ARGS')
+  # @args.each { |arg| Object.send(:remove_const, arg.upcase) }
 
   class << self
     def new(*args)
-      super(*args).send 'return_class'
+      super(*args).temp
     end
   end
 end
