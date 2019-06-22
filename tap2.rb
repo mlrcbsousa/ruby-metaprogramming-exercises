@@ -15,8 +15,6 @@ class MyClass
     @var = 'instance var'
   end
 
-  private
-
   def foo
     'MyClass#foo'
   end
