@@ -50,5 +50,25 @@ describe Object do
         it { is_expected.to eq(key: 2) }
       end
     end
+
+    context 'all in big example' do
+      subject do
+        proc do
+          (1..10)                     .mytap { |x| puts "original: #{x.inspect}" }
+            .to_a                     .mytap { |x| puts "array: #{x.inspect}" }
+            .select { |x| x % 2 == 0 }.mytap { |x| puts "evens: #{x.inspect}" }
+            .map { |x| x * x }        .mytap { |x| puts "squares: #{x.inspect}" }
+        end
+      end
+
+      it 'inspects every part of the method chain' do
+        is_expected.to output(<<~MESSAGE).to_stdout
+          original: 1..10
+          array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+          evens: [2, 4, 6, 8, 10]
+          squares: [4, 16, 36, 64, 100]
+        MESSAGE
+      end
+    end
   end
 end
