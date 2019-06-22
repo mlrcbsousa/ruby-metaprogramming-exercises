@@ -5,7 +5,7 @@ class Object
   def tap2(&blk)
     raise ArgumentError, 'Missing block' unless block_given?
 
-    instance_exec(self, &blk)
+    instance_eval(&blk)
     self
   end
 end
@@ -15,7 +15,7 @@ class MyClass
     @var = 'instance var'
   end
 
-  # private
+  private
 
   def foo
     'MyClass#foo'
